@@ -11,8 +11,7 @@ In part 4 of Luke's Youtube tutorial series, he displays code that creates a rep
 the CreateBackground method. The code has been altered slightly for this project, as it has different
 argument requirements and variable names.
 
-Disclaimer: the final level theme is based on space invaders. None of the project members own Space Invaders,
-that property belongs to the rightful owner Tomohiro Nishikado and Taito.
-
-All art assets were made by Jordan using the tool Aseprite.
-All sound assets were made by Jordan using the tool Bosca Ceoil.
+Reference HandleTouchesMoved in LevelOne.cs, LevelTwo.cs, LevelThree.cs,
+I was following on from the CocosSharp tutorial (by xamarin) video used to set up the initial project, but
+the code that they used to move the paddle seemed really choppy, so ultimately I used the code from 
+the Lab 3 Bouncing Ball game to create smoother paddle movement

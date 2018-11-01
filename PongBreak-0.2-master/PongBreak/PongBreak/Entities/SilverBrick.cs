@@ -9,7 +9,12 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-
+/* SilverBrick inherits from Brick and overrides
+ * the sprite to be silverBrick.png,
+ * it also overrides the hits to break from one hit to two hits,
+ * meaning that silver bricks take two separate collisions of the ball
+ * to break them
+ */
 namespace PongBreak
 {
     class SilverBrick : Brick

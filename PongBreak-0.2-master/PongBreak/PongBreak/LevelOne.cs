@@ -11,9 +11,10 @@ using Android.Views;
 using Android.Widget;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-//this is where hit detection logic and brick layout for the first level is defined
-//inherits from CCLayer
+// this is where hit detection logic and brick layout for the first level is defined
+// inherits from CCLayer
 // each row of bricks and their CCrects are defined in a separate list
+// since bricks are separated into their own rows, then hit detection logic must be called for each row
 namespace PongBreak
 {
     public class LevelOne : CCLayer
@@ -30,9 +31,9 @@ namespace PongBreak
         List<CCRect> bricksBoundingBoxRow2;
         List<CCRect> bricksBoundingBoxRow3;
         List<CCRect> bricksBoundingBoxRow4;
-        CCLabel debugLabel;
-        CCLabel gameOver;
-        CCRect bounds;
+        CCLabel debugLabel; //display score and lives
+        CCLabel gameOver; //displays ;'game over'
+        CCRect bounds; //screen bounds
         CCSprite backGround;
         int hitCount = 0; //hitCount is set up to prevent the ball from maintaining the same velocity when it destroys 2 bricks at once
         int lives = 3; //life counter of the player. Game over occurs if lives <= 0
@@ -155,30 +156,33 @@ namespace PongBreak
             CreateBricks(bricksBoundingBoxRow3, bricksRow3, 9, 155, 1840);
             CreateSilverBricks(bricksBoundingBoxRow4, bricksRow4, 9, 155, 2080);
             
-            var accel = new CCEventListenerAccelerometer();
             // Register for touch events
             var touchListener = new CCEventListenerTouchAllAtOnce();
-            touchListener.OnTouchesEnded = OnTouchesEnded;
+           
             touchListener.OnTouchesMoved = HandleTouchesMoved;
             AddEventListener(touchListener, this);
             //set up a schedule to run the game logic multiple times per second
             Schedule(RunGameLogic);
         }
 
-        void OnTouchesEnded(List<CCTouch> touches, CCEvent touchEvent)
-        {
-            if (touches.Count > 0)
-            {
-                // Perform touch handling here
-            }
-        }
-        //method handles moving the paddle. We *NEED* to change to Accelerometer controls as soon as possible
+        //this code for the movement of the paddle is the same code from the Lab 3 Demo
+        /* =============================================================
+         * Reference HandleTouchesMoved: source code from the Lab 3 demo
+         * Purpose: to allow the paddle to be moved wherever the player taps
+         * Date: 20/10/2018
+         * Source: University of Newcastle
+         * Author: David Cornforth
+         * url: none
+         * Adaption required: none
+         * ==============================================================
+         */
         void HandleTouchesMoved(System.Collections.Generic.List<CCTouch> touches, CCEvent touchEvent)
         {
-            //this code moves the paddle. it will need to be changed for accelerometer controls
+            //this code moves the paddle. 
             var locationOnScreen = touches[0].Location;
             p1Paddle.PositionX = locationOnScreen.X;
         }
+        //end reference HandleTouchesMoved
         //method to handle what occurs when the ball collides with a brick
         //the brick will be destroyed on collision and the ball's y velocity gets inverted
         void HandleBrickCollisions(List<CCRect> rects, List<BlueBrick> bricks)
@@ -277,13 +281,14 @@ namespace PongBreak
                     isGameOver = true;
                     return;
                 }
-                else
+                else //reset ball psoition
                 {
                     ballRep.PositionX = 720;
                     ballRep.PositionY = 1500;
                     ballRep.VelocityX = 0;
                 }
             }
+            //deflect ball off the top of screen
             if (ballRep.PositionY > VisibleBoundsWorldspace.MaxY)
             {
                 ballRep.VelocityY *= -1;
@@ -307,7 +312,7 @@ namespace PongBreak
                 highScore = p1Score;
             }
         }
-        //LevelComplete displays the highscore and provides means to return to Level Select once th elevel is complete
+        //LevelComplete displays the highscore and provides means to return to Level Select once the level is complete
         void LevelComplete(CCRect boundary)
         {
             highScore = p1Score;
@@ -335,7 +340,7 @@ namespace PongBreak
                 GameOver(isGameOver);
                 return;
             }
-            else if(p1Score == 45) //this is the maxmimum score possible, thus is the victory condition
+            else if(p1Score == 45) //this is the maxmimum score possible for this level, thus is the victory condition
             {
                 LevelComplete(bounds);
                 return;
@@ -356,6 +361,7 @@ namespace PongBreak
             HandlePaddleCollisions(p1BoundingBox, ballBoundingBox, ball);
             //ball hitting wall logic
             HandleWallCollisions(ballBoundingBox, ball);
+            //debugLabel displays the score and the lives in real time
             debugLabel.Text = string.Format("Lives: {0} Score: {1}", lives, p1Score);
         }
         //reference to the scene for navigation purposes. The level select screen uses this to navigate to this level

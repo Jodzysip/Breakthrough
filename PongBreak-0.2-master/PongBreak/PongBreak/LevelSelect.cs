@@ -12,7 +12,7 @@ using Android.Widget;
 using CocosSharp;
 /* LevelSelect class serves as a level selector for the player, where they can choose
  * from multiple (3) levels. Touch listener is set up to listen for touches of the 
- * mutliple buttons which will link to a specific level depending on which is tapped
+ * mutliple buttons which will link to a specific level depending on which button is tapped
  */
 namespace PongBreak
 {
@@ -27,12 +27,14 @@ namespace PongBreak
         {
             
         }
+        //creates the touch listener so the user can tap on the buttons
         public void createTouchListener()
         {
             var touchListener = new CCEventListenerTouchAllAtOnce();
            // touchListener.OnTouchesBegan = TouchBegan;
             AddEventListener(touchListener);
         }
+        //creates the buttons that will link to each level
         public void CreateButtons()
         {
             button1 = new CCSprite("blueButton.png");
@@ -49,7 +51,7 @@ namespace PongBreak
             AddChild(button2);
             AddChild(button3);
         }
-       
+        //creates the text "Choose a Level" which appears on the title screen
         public void CreateText()
         {
             levelSelectLabel = new CCLabel("Choose a Level:", "Arial", 50, CCLabelFormat.SystemFont);
@@ -58,6 +60,7 @@ namespace PongBreak
             levelSelectLabel.Color = CCColor3B.White;
             AddChild(levelSelectLabel);
         }
+        //adds buttons and text to the screen, and adds and registers a touchListener
         protected override void AddedToScene()
         {
             base.AddedToScene();
@@ -114,11 +117,6 @@ namespace PongBreak
             }
         }
         //end reference OnTouchesBegan
-       
-        void GoToLevelOne()
-        {
-            
-        }
         //method returns the level select screen. used in TitleLayer
         public static CCScene GetLevelSelectScene(CCWindow window)
         {

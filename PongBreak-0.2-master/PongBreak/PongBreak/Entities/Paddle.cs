@@ -10,7 +10,10 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using CocosSharp;
+/* the paddle class relates to the paddle object
+ * which the player can move to hit the ball into the arrays of bricks
 
+ */
 namespace PongBreak
 {
     class Paddle : CCNode

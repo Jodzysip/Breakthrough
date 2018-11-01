@@ -10,9 +10,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Microsoft.Xna.Framework.Graphics;
-//game scene is where the game scene is set up using CCScene. This is where backgrounds and such are drawn
-//utilises tiled backgrounds for the sake of simplicity. The plan is to make several tileable background images
-//such that different levels have a unique tiled background.
+//game scene is where the game scene is set up using CCScene. 
 namespace PongBreak
 {
     public class GameScene : CCScene
@@ -20,21 +18,25 @@ namespace PongBreak
 
         public GameScene(CCWindow window) : base(window)
         {
+            // sets up backgroundLayer as a new CCLayer
             var backgroundLayer = new CCLayer();
-           // CreateBackground(window, backgroundLayer);
-            //AddChild(backgroundLayer);
+           
         }
-
-        private void CreateBackground(CCWindow window, CCLayer backgroundLayer)
-        {
-            var texture = new CCTexture2D("redSoilTile.png");
-            texture.SamplerState = SamplerState.LinearWrap;
-            var background = new CCSprite(texture);
-            background.ContentSize = new CCSize(window.WindowSizeInPixels.Width, window.WindowSizeInPixels.Height);
-            background.TextureRectInPixels = new CCRect(0, 0, window.WindowSizeInPixels.Width, window.WindowSizeInPixels.Height);
-            background.PositionX = window.WindowSizeInPixels.Width / 2;
-            background.PositionY = window.WindowSizeInPixels.Height / 2;
-            backgroundLayer.AddChild(background);
-        }
+        /*CreateBackGround is no longer used here as the backgrounds are 
+         * defined in each level's code
+         * this method was used when developing the prototype level
+         */
+      //  private void CreateBackground(CCWindow window, CCLayer backgroundLayer)
+      //  {
+       //     var texture = new CCTexture2D("redSoilTile.png");
+       //     texture.SamplerState = SamplerState.LinearWrap;
+       //     var background = new CCSprite(texture);
+        //    background.ContentSize = new CCSize(window.WindowSizeInPixels.Width, window.WindowSizeInPixels.Height);
+        //    background.TextureRectInPixels = new CCRect(0, 0, window.WindowSizeInPixels.Width, window.WindowSizeInPixels.Height);
+        //    background.PositionX = window.WindowSizeInPixels.Width / 2;
+         //   background.PositionY = window.WindowSizeInPixels.Height / 2;
+         //   backgroundLayer.AddChild(background);
+       // }
     }
 }
+

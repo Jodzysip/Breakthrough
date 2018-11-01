@@ -20,7 +20,7 @@ namespace PongBreak
     {
         public CCSprite ballSprite;
        
-        public float VelocityX { get; set; }
+        public float VelocityX { get; set; } //public velocity values so they can be manipulated in the game levels
         public float VelocityY { get; set; }
         
         //constructor for the ball entity
@@ -29,7 +29,7 @@ namespace PongBreak
             ballSprite = new CCSprite("ball"); //set the ball's sprite to the ball image in Content folder
             ballSprite.AnchorPoint = CCPoint.AnchorMiddle;
             AddChild(ballSprite);
-            VelocityY = -200;
+            VelocityY = -400; //this is the balls speed on the Y axis. It gets inverted whenever the bal collides with another object (wall, brick, paddle)
             this.ContentSize = ballSprite.ContentSize; //sets size of bounding box to the sprite's actual size
             this.Schedule(AddVelocity);
         }

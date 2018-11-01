@@ -75,12 +75,12 @@
     <Compile Include="Entities\Paddle.cs" />
     <Compile Include="Entities\RedBrick.cs" />
     <Compile Include="Entities\SilverBrick.cs" />
+    <Compile Include="GameScene.cs" />
     <Compile Include="LevelOne.cs" />
     <Compile Include="LevelSelect.cs" />
     <Compile Include="LevelThree.cs" />
     <Compile Include="LevelTwo.cs" />
     <Compile Include="TitleLayer.cs" />
-    <Compile Include="GameScene.cs" />
     <Compile Include="Program.cs">
       <SubType>Code</SubType>
     </Compile>

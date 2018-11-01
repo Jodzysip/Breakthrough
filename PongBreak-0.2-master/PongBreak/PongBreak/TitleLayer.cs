@@ -10,10 +10,10 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-/* TitleLayer is a class that is immediately displayed tot he user when they open the app
+/* TitleLayer is a class that is immediately displayed to the user when they open the app (after splash screen)
  * It features simple touch handling so that the user can tap the screen to initiate the 
- * level select menu, and from there choose a level to play
- * 
+ * level select menu, and from there choose a level to play.
+ * TitleLayer also displays text featuring the authors of the app
  * 
  */
 namespace PongBreak
@@ -33,13 +33,13 @@ namespace PongBreak
         {
             base.AddedToScene();
             CreateText();
-            logo = new CCSprite("Breakthrough logo.png");
+            logo = new CCSprite("Breakthrough logo.png"); //ad the BreakThrough logo to the screen
             logo.PositionX = 720.0f;
             logo.PositionY = 2000.0f;
             AddChild(logo);
 
         }
-
+        //create the text to display on the title screen
         private void CreateText()
         {
             tapToStart = new CCLabel("Tap Screen to Start", "Arial", 50, CCLabelFormat.SystemFont);

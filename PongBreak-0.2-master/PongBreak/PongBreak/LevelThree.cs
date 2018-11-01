@@ -14,6 +14,7 @@ using Microsoft.Xna.Framework.Graphics;
 //this is where hit detection logic and brick layout for the first level is defined
 //inherits from CCLayer
 // each row of bricks and their CCrects are defined in a separate list
+//LevelThree's level layout is based on the sprite from Space Invaders, and requires precise placement of bricks
 namespace PongBreak
 {
     public class LevelThree : CCLayer
@@ -22,7 +23,7 @@ namespace PongBreak
         Paddle p1Paddle;//paddle entities for each player
         //each row of bricks is separate, this allows for creating multiple rows of bricks
         //using different brick sprites for each row if neceessary
-        List<Brick> bricksRow1;//array of brick entities. a row of bricks
+        List<Brick> bricksRow1;//array of brick entities. there are many bricks and bounding boxes in this level
         List<Brick> bricksRow2;
         List<Brick> bricksRow3;
         List<Brick> bricksRow4;
@@ -66,9 +67,9 @@ namespace PongBreak
         List<CCRect> bricksBoundingBoxRow20;
         List<CCRect> bricksBoundingBoxRow21;
         List<CCRect> bricksBoundingBoxRow22;
-        CCLabel debugLabel;
-        CCLabel gameOver;
-        CCRect bounds;
+        CCLabel debugLabel; //displays score and lives
+        CCLabel gameOver; // displays "game over"
+        CCRect bounds; // screen bounds
         CCSprite backGround;
         int hitCount = 0; //hitCount is set up to prevent the ball from maintaining the same velocity when it destroys 2 bricks at once
         int lives = 3; //life counter of the player. Game over occurs if lives <= 0
@@ -78,8 +79,6 @@ namespace PongBreak
         bool isGameOver = false;
         public LevelThree()
         {
-            
-
             Schedule(RunGameLogic);
         }
         void CreateLabels()
@@ -166,7 +165,8 @@ namespace PongBreak
             p1Paddle.PositionY = 100;
             AddChild(p1Paddle);
             //initalise array of bricks and array of CCRects for each brick
-            //each row of bricks contains 9 bricks per row
+            //Due to the complex nature of the third level, there are
+            //many rows of bounding boxes and bricks
             bricksBoundingBoxRow1 = new List<CCRect>();
             bricksBoundingBoxRow2 = new List<CCRect>();
             bricksBoundingBoxRow3 = new List<CCRect>();
@@ -233,31 +233,33 @@ namespace PongBreak
             CreateBricks(bricksBoundingBoxRow20, bricksRow20, 2, 1240, 1530, 105);
             CreateBricks(bricksBoundingBoxRow21, bricksRow21, 2, 1240, 1460, 105);
             CreateBricks(bricksBoundingBoxRow22, bricksRow22, 2, 400, 1320, 520);
-            
-            var accel = new CCEventListenerAccelerometer();
+           
             // Register for touch events
             var touchListener = new CCEventListenerTouchAllAtOnce();
-            touchListener.OnTouchesEnded = OnTouchesEnded;
+           
             touchListener.OnTouchesMoved = HandleTouchesMoved;
             AddEventListener(touchListener, this);
             //set up a schedule to run the game logic multiple times per second
             Schedule(RunGameLogic);
         }
 
-        void OnTouchesEnded(List<CCTouch> touches, CCEvent touchEvent)
-        {
-            if (touches.Count > 0)
-            {
-                // Perform touch handling here
-            }
-        }
-        //method handles moving the paddle. We *NEED* to change to Accelerometer controls as soon as possible
+        /* =============================================================
+         * Reference HandleTouchesMoved: source code from the Lab 3 demo
+         * Purpose: to allow the paddle to be moved wherever the player taps
+         * Date: 20/10/2018
+         * Source: University of Newcastle
+         * Author: David Cornforth
+         * url: none
+         * Adaption required: none
+         * ==============================================================
+         */
         void HandleTouchesMoved(System.Collections.Generic.List<CCTouch> touches, CCEvent touchEvent)
         {
             //this code moves the paddle. it will need to be changed for accelerometer controls
             var locationOnScreen = touches[0].Location;
             p1Paddle.PositionX = locationOnScreen.X;
         }
+        //end reference HandleTouchesMoved
         //method to handle what occurs when the ball collides with a brick
         //the brick will be destroyed on collision and the ball's y velocity gets inverted
         void HandleBrickCollisions(List<CCRect> rects, List<Brick> bricks)
@@ -331,19 +333,21 @@ namespace PongBreak
                     isGameOver = true;
                     return;
                 }
-                else
+                else //reset ball position
                 {
                     ballRep.PositionX = 720;
                     ballRep.PositionY = 1500;
                     ballRep.VelocityX = 0;
                 }
             }
+            //if ball hits top of screen
             if (ballRep.PositionY > VisibleBoundsWorldspace.MaxY)
             {
                 ballRep.VelocityY *= -1;
                 hitCount = 0;
             }
         }
+        //code that occurs when the player triggers game over
         void GameOver(bool isGameOver, CCRect bounds)
         {
             if (isGameOver)
@@ -360,7 +364,7 @@ namespace PongBreak
                 highScore = p1Score;
             }
         }
-        //LevelComplete displays the highscore and provides means to return to Level Select once th elevel is complete
+        //LevelComplete displays the highscore and provides means to return to Level Select once the level is complete
         void LevelComplete(CCRect boundary)
         {
             highScore = p1Score;
@@ -388,7 +392,7 @@ namespace PongBreak
                 GameOver(isGameOver, bounds);
                 return;
             }
-            else if (p1Score == 69) //this is the maximum score possible, thus is the victory condition
+            else if (p1Score == 69) //this is the maximum score possible for this level, thus is the victory condition
             {
                 LevelComplete(bounds);
                 return;
@@ -401,6 +405,7 @@ namespace PongBreak
             //display score and lives
 
             //call handling brick collisions here
+            //since there are many rows, requires many calls to the HandleBrickCollisions method
             HandleBrickCollisions(bricksBoundingBoxRow1, bricksRow1);
             HandleBrickCollisions(bricksBoundingBoxRow2, bricksRow2);
             HandleBrickCollisions(bricksBoundingBoxRow3, bricksRow3);
@@ -428,8 +433,10 @@ namespace PongBreak
             HandlePaddleCollisions(p1BoundingBox, ballBoundingBox, ball);
             //ball hitting wall logic
             HandleWallCollisions(ballBoundingBox, ball);
+            //update score and lives in real time
             debugLabel.Text = string.Format("Lives: {0} Score: {1}", lives, p1Score);
         }
+        //LvlThreeScene called in level select to call this level into the screen
         public static CCScene LvlThreeScene(CCWindow mainWindow)
         {
             var scene = new CCScene(mainWindow);

@@ -9,7 +9,10 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-
+/*BlueBrick inherits the Brick class
+ *  and overrides the CCSprite to be a blue brick sprite
+ *  instead of green
+ */
 namespace PongBreak
 {
     class BlueBrick : Brick

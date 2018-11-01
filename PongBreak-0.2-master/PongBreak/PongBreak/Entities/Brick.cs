@@ -10,7 +10,11 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using CocosSharp;
-
+/* The Brick class defines the code and the 
+ * sprite pertaining to the brick objects
+ * in the game. The base brick class uses a green brick sprite,
+ * this can be overriden to change the brick's sprite in other classes
+ */
 namespace PongBreak
 {
     class Brick : CCNode
@@ -27,11 +31,11 @@ namespace PongBreak
             Hits = 0;
             HitsToBreak();
         }
-        public virtual CCSprite BrickSprite()
+        public virtual CCSprite BrickSprite() //this is where the sprite is assigned
         {
             return new CCSprite("greenBrick");
         }
-        public virtual int HitsToBreak()
+        public virtual int HitsToBreak() //int determines how many hits it takes to break a brick
         {
             return 1;
         }

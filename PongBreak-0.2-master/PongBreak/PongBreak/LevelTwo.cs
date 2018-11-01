@@ -14,6 +14,7 @@ using Microsoft.Xna.Framework.Graphics;
 //this is where hit detection logic and brick layout for the first level is defined
 //inherits from CCLayer
 // each row of bricks and their CCrects are defined in a separate list
+//LevelTwo is similar to levelOne, but with more rows of bricks and a second row of SilverBricks
 namespace PongBreak
 {
     public class LevelTwo : CCLayer
@@ -34,9 +35,9 @@ namespace PongBreak
         List<CCRect> bricksBoundingBoxRow4;
         List<CCRect> bricksBoundingBoxRow5;
         List<CCRect> bricksBoundingBoxRow6;
-        CCLabel debugLabel;
-        CCLabel gameOver;
-        CCRect bounds;
+        CCLabel debugLabel; //this is the score and lives label
+        CCLabel gameOver; //displays "Game Over"
+        CCRect bounds; //screen bounds
         CCSprite backGround;
         int hitCount = 0; //hitCount is set up to prevent the ball from maintaining the same velocity when it destroys 2 bricks at once
         int lives = 3; //life counter of the player. Game over occurs if lives <= 0
@@ -50,6 +51,7 @@ namespace PongBreak
 
             Schedule(RunGameLogic);
         }
+        //create game over and score/ lives labels
         void CreateLabels()
         {
             debugLabel = new CCLabel("Score = ", "Arial", 40, CCLabelFormat.SystemFont);
@@ -78,6 +80,7 @@ namespace PongBreak
                 rects[i] = bricksList[i].BoundingBoxTransformedToParent;
             }
         }
+        //create an array of silverbricks
         void CreateSilverBricks(List<CCRect> rects, List<SilverBrick> bricksList, int amount, float x, float y)
         {
 
@@ -120,7 +123,6 @@ namespace PongBreak
 
             Schedule(RunGameLogic);
             bounds = VisibleBoundsWorldspace;
-
 
             CreateBackGround(bounds);
 
@@ -166,30 +168,31 @@ namespace PongBreak
             CreateBricks(bricksBoundingBoxRow5, bricksRow5, 9, 155, 1760);
             CreateSilverBricks(bricksBoundingBoxRow6, bricksRow6, 9, 155, 2160);
 
-            var accel = new CCEventListenerAccelerometer();
             // Register for touch events
             var touchListener = new CCEventListenerTouchAllAtOnce();
-            touchListener.OnTouchesEnded = OnTouchesEnded;
+
             touchListener.OnTouchesMoved = HandleTouchesMoved;
             AddEventListener(touchListener, this);
             //set up a schedule to run the game logic multiple times per second
             Schedule(RunGameLogic);
         }
-
-        void OnTouchesEnded(List<CCTouch> touches, CCEvent touchEvent)
-        {
-            if (touches.Count > 0)
-            {
-                // Perform touch handling here
-            }
-        }
-        //method handles moving the paddle. We *NEED* to change to Accelerometer controls as soon as possible
+        /* =============================================================
+          * Reference HandleTouchesMoved: source code from the Lab 3 demo
+          * Purpose: to allow the paddle to be moved wherever the player taps
+          * Date: 20/10/2018
+          * Source: University of Newcastle
+          * Author: David Cornforth
+          * url: none
+          * Adaption required: none
+          * ==============================================================
+          */
         void HandleTouchesMoved(System.Collections.Generic.List<CCTouch> touches, CCEvent touchEvent)
         {
-            //this code moves the paddle. it will need to be changed for accelerometer controls
+            //this code moves the paddle. 
             var locationOnScreen = touches[0].Location;
             p1Paddle.PositionX = locationOnScreen.X;
         }
+        //end reference HandleTouchesMoved
         //method to handle what occurs when the ball collides with a brick
         //the brick will be destroyed on collision and the ball's y velocity gets inverted
         void HandleBrickCollisions(List<CCRect> rects, List<RedBrick> bricks)
@@ -216,6 +219,7 @@ namespace PongBreak
                 }
             }
         }
+        //method to handle the collision logic when the ball hits a silver brick
         void HandleSilverBrickCollisions(List<CCRect> rects, List<SilverBrick> silverBricks)
         {
             for (int i = 0; i < rects.Count; i++)
@@ -240,6 +244,7 @@ namespace PongBreak
                 }
             }
         }
+        //handle what occurs when the ball hits the paddle (invert ball yVelocity)
         void HandlePaddleCollisions(CCRect paddleBox, CCRect ballBox, Ball ballRep)
         {
             bool doesBallOverlapPaddle = ballBox.IntersectsRect(paddleBox);
@@ -299,6 +304,7 @@ namespace PongBreak
                 hitCount = 0;
             }
         }
+        //what occurs when gameOver == true
         void GameOver(bool isGameOver)
         {
             if (isGameOver)
@@ -315,7 +321,7 @@ namespace PongBreak
                 highScore = p1Score;
             }
         }
-        //LevelComplete displays the highscore and provides means to return to Level Select once th elevel is complete
+        //LevelComplete displays the highscore and provides means to return to Level Select once the level is complete
         void LevelComplete(CCRect boundary)
         {
             highScore = p1Score;
@@ -343,12 +349,12 @@ namespace PongBreak
                 GameOver(isGameOver);
                 return;
             }
-            else if (p1Score == 72) //this is the maximum score possible, thus is the victory condition
+            else if (p1Score == 72) //this is the maximum score possible for this level, thus is the victory condition
             {
                 LevelComplete(bounds);
                 return;
             }
-            ball.PositionY += ball.VelocityY * frameTimeInSeconds;
+            ball.PositionY += ball.VelocityY * frameTimeInSeconds; //moving the ball
             ballBoundingBox = ball.BoundingBoxTransformedToParent; // bb for ball
             p1BoundingBox = p1Paddle.BoundingBoxTransformedToParent; //bb for p1Paddle
 
@@ -368,6 +374,7 @@ namespace PongBreak
             HandleWallCollisions(ballBoundingBox, ball);
             debugLabel.Text = string.Format("Lives: {0} Score: {1}", lives, p1Score);
         }
+        //provides a reference to this scene to be used with the Level Select screen
         public static CCScene LvlTwoScene(CCWindow mainWindow)
         {
             var scene = new CCScene(mainWindow);

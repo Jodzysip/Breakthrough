@@ -9,7 +9,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-
+//RedBrick inherits from Brick and overrides the sprite to redBrick.png
 namespace PongBreak
 {
     class RedBrick : Brick

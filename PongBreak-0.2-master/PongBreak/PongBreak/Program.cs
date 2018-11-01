@@ -16,7 +16,7 @@ using CocosSharp;
 namespace PongBreak
 {
 
-    [Activity(Label = "PongBreak"
+    [Activity(Label = "Breakthrough" //title changed from PongBreak to Breakthrough to suit the new project scope
         , MainLauncher = true
         , Icon = "@drawable/icon"
         , Theme = "@style/Theme.Splash"
